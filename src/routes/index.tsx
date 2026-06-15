@@ -17,9 +17,7 @@ import { DateField } from "@/components/DateField";
 import { TimeField } from "@/components/TimeField";
 import { toast } from "sonner";
 import { MapPin, ExternalLink, ShieldCheck, FileText, CreditCard, Loader2 } from "lucide-react";
-import paymentQrAsset from "@/assets/payment-qr.jpeg.asset.json";
-
-const DEFAULT_QR_URL = paymentQrAsset.url;
+const DEFAULT_QR_URL = "/payment-qr.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
