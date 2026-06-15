@@ -1,26 +1,21 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - tanstackStart, viteReact, tailwindcss, tsConfigPaths, nitro (build-only using cloudflare as a default target),
-//     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
-//     error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-//
-// VERCEL DEPLOYMENT: We override the default Nitro preset from "cloudflare" to "vercel"
-// so the build produces .vercel/output/ serverless functions instead of Cloudflare Workers.
+// VERCEL DEPLOYMENT:
+// 1. We disable the Cloudflare plugin from @lovable.dev/vite-tanstack-config (cloudflare: false).
+// 2. We add the TanStack Start plugin which registers the SSR handler, routes, and
+//    server functions with Nitro. Without this, Nitro builds an empty server.
+// 3. We add the Nitro plugin with preset: "vercel" to produce .vercel/output/
+//    serverless functions instead of Cloudflare Workers.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 
 export default defineConfig({
-  vite: {
-    plugins: [
-      nitro({
-        preset: "vercel",
-      }),
-    ],
-  },
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
-  },
+  cloudflare: false,
+  plugins: [
+    tanstackStart({
+      server: { entry: "server" },
+    }),
+    nitro({
+      preset: "vercel",
+    }),
+  ],
 });
