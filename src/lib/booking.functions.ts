@@ -117,7 +117,8 @@ export const updateQr = createServerFn({ method: "POST" })
   });
 
 const uploadSchema = z.object({
-  bucket: z.enum(["rental-documents", "rental-qr"]),
+  bucket: z.enum(["user-docs", "rental-qr"]),
+  folder: z.string().optional(),
   filename: z.string().min(1).max(200),
   contentType: z.string().min(1),
   dataBase64: z.string().min(1),
@@ -127,9 +128,15 @@ export const uploadFile = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => uploadSchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const ext = data.filename.split(".").pop() || "bin";
-    const path = `${crypto.randomUUID()}.${ext.toLowerCase()}`;
+    const cleanName = data.filename.replace(/[^a-zA-Z0-9.\-_]/g, "");
+    const folderName = data.folder ? data.folder.replace(/[^a-zA-Z0-9_\-]/g, "") : "misc";
+    const path = `${folderName}/${Date.now()}-${cleanName}`;
     const buffer = Buffer.from(data.dataBase64, "base64");
+    
+    console.log("[Upload Debug] Bucket:", data.bucket);
+    console.log("[Upload Debug] Original File:", data.filename);
+    console.log("[Upload Debug] Generated Path:", path);
+
     if (buffer.byteLength > 5 * 1024 * 1024) {
       throw new Error("File too large (max 5MB).");
     }

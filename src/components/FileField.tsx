@@ -10,11 +10,12 @@ type Props = {
   label: string;
   required?: boolean;
   bucket?: string;
+  folder?: string;
   value: string;
   onChange: (path: string) => void;
 };
 
-export function FileField({ label, required, bucket = "rental-documents", value, onChange }: Props) {
+export function FileField({ label, required, bucket = "user-docs", folder, value, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [fileName, setFileName] = useState("");
@@ -31,7 +32,7 @@ export function FileField({ label, required, bucket = "rental-documents", value,
     }
     setUploading(true);
     try {
-      const fullPath = await uploadDirect(file, bucket as "rental-documents" | "rental-qr");
+      const fullPath = await uploadDirect(file, bucket as "user-docs" | "rental-qr", folder);
       onChange(fullPath);
       setFileName(file.name);
     } catch (e) {

@@ -10,11 +10,12 @@ interface Props {
   label: string;
   required?: boolean;
   bucket?: string;
+  folder?: string;
   values: string[];
   onChange: (paths: string[]) => void;
 }
 
-export function MultiFileField({ label, required, bucket = "rental-documents", values, onChange }: Props) {
+export function MultiFileField({ label, required, bucket = "user-docs", folder, values, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [fileNames, setFileNames] = useState<Record<string, string>>({});
@@ -31,7 +32,7 @@ export function MultiFileField({ label, required, bucket = "rental-documents", v
     }
     setUploading(true);
     try {
-      const fullPath = await uploadDirect(file, bucket as "rental-documents" | "rental-qr");
+      const fullPath = await uploadDirect(file, bucket as "user-docs" | "rental-qr", folder);
       onChange([...values, fullPath]);
       setFileNames((prev) => ({ ...prev, [fullPath]: file.name }));
     } catch (e) {

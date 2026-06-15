@@ -168,9 +168,9 @@ function BookingPage() {
           {/* 4. Documents */}
           <Section step={4} title="Document Uploads" icon={<FileText className="h-5 w-5" />}>
             <div className="space-y-5">
-              <FileField label="Aadhaar Card" required value={form.aadhaar_url} onChange={(p) => set("aadhaar_url", p)} />
-              <FileField label="PAN Card" required value={form.pan_url} onChange={(p) => set("pan_url", p)} />
-              <FileField label="Driving Licence" required value={form.driving_licence_url} onChange={(p) => set("driving_licence_url", p)} />
+              <FileField label="Aadhaar Card" folder="aadhaar" required value={form.aadhaar_url} onChange={(p) => set("aadhaar_url", p)} />
+              <FileField label="PAN Card" folder="pan" required value={form.pan_url} onChange={(p) => set("pan_url", p)} />
+              <FileField label="Driving Licence" folder="licence" required value={form.driving_licence_url} onChange={(p) => set("driving_licence_url", p)} />
 
               <div>
                 <Label className="text-sm font-medium">Local Address Proof Type <span className="text-destructive">*</span></Label>
@@ -182,7 +182,7 @@ function BookingPage() {
                   ))}
                 </RadioGroup>
                 <div className="mt-3">
-                  <MultiFileField label={`Upload ${form.address_proof_type}`} required values={form.address_proof_urls} onChange={(paths) => set("address_proof_urls", paths)} />
+                  <MultiFileField label={`Upload ${form.address_proof_type}`} folder="address-proof" required values={form.address_proof_urls} onChange={(paths) => set("address_proof_urls", paths)} />
                 </div>
               </div>
 
@@ -196,7 +196,7 @@ function BookingPage() {
                   ))}
                 </RadioGroup>
                 <div className="mt-3">
-                  <FileField label={`Upload ${form.deposit_doc_type}`} required value={form.deposit_doc_url} onChange={(p) => set("deposit_doc_url", p)} />
+                  <FileField label={`Upload ${form.deposit_doc_type}`} folder="deposit" required value={form.deposit_doc_url} onChange={(p) => set("deposit_doc_url", p)} />
                 </div>
               </div>
             </div>
@@ -221,7 +221,7 @@ function BookingPage() {
                 <p className="text-sm font-medium">After paying, upload your payment screenshot below.</p>
                 <p className="text-xs text-muted-foreground mt-1">This is required to confirm your booking.</p>
                 <div className="mt-4">
-                  <FileField label="Payment Screenshot" required value={form.payment_screenshot_url} onChange={(p) => set("payment_screenshot_url", p)} />
+                  <FileField label="Payment Screenshot" folder="payment" required value={form.payment_screenshot_url} onChange={(p) => set("payment_screenshot_url", p)} />
                 </div>
               </div>
             </div>

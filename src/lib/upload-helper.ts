@@ -15,7 +15,8 @@ function fileToBase64(file: File): Promise<string> {
 
 export async function uploadDirect(
   file: File,
-  bucket: "rental-documents" | "rental-qr",
+  bucket: "user-docs" | "rental-qr",
+  folder?: string
 ): Promise<string> {
   if (file.size > 5 * 1024 * 1024) {
     throw new Error("File too large (max 5MB).");
@@ -24,6 +25,7 @@ export async function uploadDirect(
   const res = await uploadFile({
     data: {
       bucket,
+      folder,
       filename: file.name,
       contentType: file.type || "application/octet-stream",
       dataBase64,
