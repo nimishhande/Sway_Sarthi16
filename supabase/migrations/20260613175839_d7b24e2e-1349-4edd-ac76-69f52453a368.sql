@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN driving_licence_url text NOT NULL DEFAULT '';
