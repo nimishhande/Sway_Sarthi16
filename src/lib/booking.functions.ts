@@ -85,17 +85,22 @@ export const submitBooking = createServerFn({ method: "POST" })
     }
 
     // Fire-and-handle notifications; never block booking success.
-    const notify = await sendOwnerNotifications({ ...data, booking_code: row.booking_code });
-    const customerEmailStatus = await sendCustomerConfirmationEmail({ ...data, booking_code: row.booking_code });
+    try {
+      const notify = await sendOwnerNotifications({ ...data, booking_code: row.booking_code });
+      const customerEmailStatus = await sendCustomerConfirmationEmail({ ...data, booking_code: row.booking_code });
 
-    await supabaseAdmin
-      .from("bookings")
-      .update({
-        notify_email_status: notify.email,
-        notify_whatsapp_status: notify.whatsapp,
-        notify_customer_email_status: customerEmailStatus,
-      })
-      .eq("id", row.id);
+      await supabaseAdmin
+        .from("bookings")
+        .update({
+          notify_email_status: notify.email,
+          notify_whatsapp_status: notify.whatsapp,
+          notify_customer_email_status: customerEmailStatus,
+        })
+        .eq("id", row.id);
+    } catch (err) {
+      console.error("Critical failure during notification dispatch:", err);
+      // We explicitly swallow this error so the booking success is returned to the user.
+    }
 
     return { booking_code: row.booking_code };
   });
