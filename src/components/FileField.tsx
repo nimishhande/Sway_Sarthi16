@@ -13,9 +13,10 @@ type Props = {
   folder?: string;
   value: string;
   onChange: (path: string) => void;
+  capture?: "user" | "environment";
 };
 
-export function FileField({ label, required, bucket = "user-docs", folder, value, onChange }: Props) {
+export function FileField({ label, required, bucket = "user-docs", folder, value, onChange, capture }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [fileName, setFileName] = useState("");
@@ -71,13 +72,14 @@ export function FileField({ label, required, bucket = "user-docs", folder, value
             className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-input bg-background px-3 py-3.5 text-sm text-muted-foreground transition-colors hover:border-primary hover:bg-accent hover:text-foreground disabled:opacity-50"
           >
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
-            {uploading ? "Uploading..." : "Click to upload (JPG, PNG, PDF · max 5MB)"}
+            {uploading ? "Uploading..." : (capture ? "Tap to take photo" : "Click to upload (JPG, PNG, PDF · max 5MB)")}
           </button>
         )}
         <input
           ref={inputRef}
           type="file"
-          accept={ACCEPT}
+          accept={capture ? "image/*" : ACCEPT}
+          capture={capture}
           className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handle(f); }}
         />

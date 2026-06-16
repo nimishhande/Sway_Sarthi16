@@ -20,8 +20,7 @@ export function SiteHeader() {
           </div>
           <div className="hidden text-sm font-medium text-white/80 sm:flex gap-6">
             <span className="hover:text-white cursor-pointer transition-colors">Home</span>
-            <span className="hover:text-white cursor-pointer transition-colors">Services</span>
-            <span className="hover:text-white cursor-pointer transition-colors">Contact</span>
+            <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </div>
         </div>
       </div>

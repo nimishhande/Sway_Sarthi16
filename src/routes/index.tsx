@@ -16,11 +16,10 @@ import { MultiFileField } from "@/components/MultiFileField";
 import { DateField } from "@/components/DateField";
 import { TimeField } from "@/components/TimeField";
 import { toast } from "sonner";
-import { MapPin, ExternalLink, ShieldCheck, FileText, CreditCard, Loader2 } from "lucide-react";
+import { MapPin, ExternalLink, ShieldCheck, FileText, CreditCard, Loader2, Camera } from "lucide-react";
 import { SiteFooter } from "@/components/SiteFooter";
-import { LiveSelfieCapture } from "@/components/LiveSelfieCapture";
 import { motion } from "framer-motion";
-const DEFAULT_QR_URL = "/payment-qr.jpg";
+const DEFAULT_QR_URL = "/payment-qr.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -169,7 +168,7 @@ function BookingPage() {
           {/* 4. Documents */}
           <Section step={4} title="Document Uploads" icon={<FileText className="h-5 w-5" />}>
             <div className="space-y-5">
-              <LiveSelfieCapture label="Live Selfie Verification" required value={form.selfie_url} onChange={(p) => set("selfie_url", p)} />
+              <FileField label="Live Identity Verification (Take a Selfie)" folder="selfie" capture="user" required value={form.selfie_url} onChange={(p) => set("selfie_url", p)} />
               <FileField label="Aadhaar Card" folder="aadhaar" required value={form.aadhaar_url} onChange={(p) => set("aadhaar_url", p)} />
               <FileField label="PAN Card" folder="pan" required value={form.pan_url} onChange={(p) => set("pan_url", p)} />
               <FileField label="Driving Licence" folder="licence" required value={form.driving_licence_url} onChange={(p) => set("driving_licence_url", p)} />

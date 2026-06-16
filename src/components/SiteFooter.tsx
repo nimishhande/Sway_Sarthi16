@@ -2,7 +2,7 @@ import { Car, Instagram, Facebook, Twitter, Mail, Phone, MapPin } from "lucide-r
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[#111827] text-white/80 py-12 sm:py-16 mt-16 border-t border-white/10">
+    <footer id="contact" className="bg-[#111827] text-white/80 py-12 sm:py-16 mt-16 border-t border-white/10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           
