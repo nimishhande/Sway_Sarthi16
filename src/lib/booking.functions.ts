@@ -24,6 +24,7 @@ const submitSchema = z.object({
   address_proof_urls: z.array(z.string().min(1)).min(1),
   deposit_doc_url: z.string().min(1),
   payment_screenshot_url: z.string().min(1),
+  selfie_url: z.string().min(1),
   signature_name: z.string().min(2),
   terms_accepted: z.literal(true),
   declaration_accepted: z.literal(true),

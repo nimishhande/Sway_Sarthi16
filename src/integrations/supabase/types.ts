@@ -55,6 +55,7 @@ export type Database = {
           notify_whatsapp_status: string | null
           pan_url: string
           payment_screenshot_url: string
+          selfie_url: string
           pickup_location: string
           pickup_time: string
           return_date: string
@@ -86,6 +87,7 @@ export type Database = {
           notify_whatsapp_status?: string | null
           pan_url: string
           payment_screenshot_url: string
+          selfie_url: string
           pickup_location: string
           pickup_time: string
           return_date: string
@@ -117,6 +119,7 @@ export type Database = {
           notify_whatsapp_status?: string | null
           pan_url?: string
           payment_screenshot_url?: string
+          selfie_url?: string
           pickup_location?: string
           pickup_time?: string
           return_date?: string

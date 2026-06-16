@@ -17,6 +17,9 @@ import { DateField } from "@/components/DateField";
 import { TimeField } from "@/components/TimeField";
 import { toast } from "sonner";
 import { MapPin, ExternalLink, ShieldCheck, FileText, CreditCard, Loader2 } from "lucide-react";
+import { SiteFooter } from "@/components/SiteFooter";
+import { LiveSelfieCapture } from "@/components/LiveSelfieCapture";
+import { motion } from "framer-motion";
 const DEFAULT_QR_URL = "/payment-qr.jpg";
 
 export const Route = createFileRoute("/")({
@@ -50,7 +53,7 @@ const initialForm = {
   address_proof_type: "Electricity Bill",
   deposit_doc_type: "Bike",
   aadhaar_url: "", pan_url: "", driving_licence_url: "", address_proof_urls: [] as string[],
-  deposit_doc_url: "", payment_screenshot_url: "",
+  deposit_doc_url: "", payment_screenshot_url: "", selfie_url: "",
   signature_name: "",
 };
 
@@ -166,6 +169,7 @@ function BookingPage() {
           {/* 4. Documents */}
           <Section step={4} title="Document Uploads" icon={<FileText className="h-5 w-5" />}>
             <div className="space-y-5">
+              <LiveSelfieCapture label="Live Selfie Verification" required value={form.selfie_url} onChange={(p) => set("selfie_url", p)} />
               <FileField label="Aadhaar Card" folder="aadhaar" required value={form.aadhaar_url} onChange={(p) => set("aadhaar_url", p)} />
               <FileField label="PAN Card" folder="pan" required value={form.pan_url} onChange={(p) => set("pan_url", p)} />
               <FileField label="Driving Licence" folder="licence" required value={form.driving_licence_url} onChange={(p) => set("driving_licence_url", p)} />
@@ -258,22 +262,30 @@ function BookingPage() {
           </p>
         </form>
       </div>
+      <SiteFooter />
     </main>
   );
 }
 
 function Section({ step, title, icon, children }: { step: number; title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <Card className="overflow-hidden shadow-card border-border/60">
-      <div className="flex items-center gap-3 border-b bg-gradient-to-r from-accent/40 to-transparent px-5 py-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-brand text-white">{icon}</div>
-        <div>
-          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Step {step}</p>
-          <h2 className="text-lg font-semibold">{title}</h2>
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <Card className="overflow-hidden shadow-card border-border/60">
+        <div className="flex items-center gap-3 border-b bg-gradient-to-r from-accent/40 to-transparent px-5 py-4">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-brand text-white">{icon}</div>
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Step {step}</p>
+            <h2 className="text-lg font-semibold">{title}</h2>
+          </div>
         </div>
-      </div>
-      <div className="p-5">{children}</div>
-    </Card>
+        <div className="p-5">{children}</div>
+      </Card>
+    </motion.div>
   );
 }
 

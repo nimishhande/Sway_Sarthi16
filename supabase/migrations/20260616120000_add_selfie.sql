@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS selfie_url TEXT NOT NULL DEFAULT '';
