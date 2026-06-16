@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
 const TERMS = [
   "For 24 hrs 350 km limit will be given. If km exceeds more than 350 kms, ₹5 per km for 5-seater and ₹7 per km for 7-seater charges will be applied.",
   "If time exceeds more than 24 hrs then ₹150 per hour charges will be applied.",
-  "Security Deposit: 1. Bike or 2. Small cars 5000 rs / Big SUV 10000 rs.",
+  "Security deposit: Bike or Amount. If Small Car ( 5 seater or Ertiga) = 5000 Rs. / Big SUV ( 7 seater) = 10000 Rs.",
   "Advance payment is non-refundable.",
   "Dents, long scratches, breakage etc. cannot be claimed in insurance.",
   "Do not drink and drive. Customer is responsible for all damages.",
@@ -187,7 +187,7 @@ function BookingPage() {
               <div>
                 <Label className="text-sm font-medium">Security Deposit Type <span className="text-destructive">*</span></Label>
                 <RadioGroup value={form.deposit_doc_type} onValueChange={(v) => { set("deposit_doc_type", v); set("deposit_doc_url", ""); }} className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {["Bike", "Money"].map((o) => (
+                  {["Bike", "Security Deposit"].map((o) => (
                     <label key={o} className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm cursor-pointer hover:bg-accent">
                       <RadioGroupItem value={o} />{o}
                     </label>
