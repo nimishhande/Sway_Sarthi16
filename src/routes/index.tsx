@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
 const TERMS = [
   "For 24 hrs 350 km limit will be given. If km exceeds more than 350 kms, ₹5 per km for 5-seater and ₹7 per km for 7-seater charges will be applied.",
   "If time exceeds more than 24 hrs then ₹150 per hour charges will be applied.",
-  "Deposit: Customer's bike or ₹10,000.",
+  "Security Deposit: 1. Bike or 2. Small cars 5000 rs / Big SUV 10000 rs.",
   "Advance payment is non-refundable.",
   "Dents, long scratches, breakage etc. cannot be claimed in insurance.",
   "Do not drink and drive. Customer is responsible for all damages.",
@@ -48,7 +48,7 @@ const initialForm = {
   return_date: "", return_time: "",
   mobile_1: "", mobile_2: "", email: "",
   address_proof_type: "Electricity Bill",
-  deposit_doc_type: "Vehicle RC",
+  deposit_doc_type: "Bike",
   aadhaar_url: "", pan_url: "", driving_licence_url: "", address_proof_urls: [] as string[],
   deposit_doc_url: "", payment_screenshot_url: "",
   signature_name: "",
@@ -185,16 +185,22 @@ function BookingPage() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Deposit Document <span className="text-destructive">*</span></Label>
-                <RadioGroup value={form.deposit_doc_type} onValueChange={(v) => set("deposit_doc_type", v)} className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {["Vehicle RC", "Current Month Electricity Bill", "Rent Agreement"].map((o) => (
+                <Label className="text-sm font-medium">Security Deposit Type <span className="text-destructive">*</span></Label>
+                <RadioGroup value={form.deposit_doc_type} onValueChange={(v) => { set("deposit_doc_type", v); set("deposit_doc_url", ""); }} className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {["Bike", "Money"].map((o) => (
                     <label key={o} className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm cursor-pointer hover:bg-accent">
                       <RadioGroupItem value={o} />{o}
                     </label>
                   ))}
                 </RadioGroup>
                 <div className="mt-3">
-                  <FileField label={`Upload ${form.deposit_doc_type}`} folder="deposit" required value={form.deposit_doc_url} onChange={(p) => set("deposit_doc_url", p)} />
+                  <FileField 
+                    label={form.deposit_doc_type === "Bike" ? "Upload Vehicle RC" : "Upload Transaction Screenshot"} 
+                    folder="deposit" 
+                    required 
+                    value={form.deposit_doc_url} 
+                    onChange={(p) => set("deposit_doc_url", p)} 
+                  />
                 </div>
               </div>
             </div>
