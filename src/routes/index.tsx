@@ -32,8 +32,8 @@ export const Route = createFileRoute("/")({
 });
 
 const TERMS = [
-  "For 24 hrs 350 km limit will be given. If km exceeds more than 350 kms, ₹5 per km for 5-seater and ₹7 per km for 7-seater charges will be applied.",
-  "If time exceeds more than 24 hrs then ₹150 per hour charges will be applied.",
+  "For 24 hrs 350 km limit will be given. If km exceeds more than 350 kms, ₹5 per km for 5-seater and ₹12 per km for 7-seater charges will be applied.",
+  "If time exceeds more than 24 hrs then ₹200 per hour charges will be applied.",
   "Security deposit: Bike or Amount. If Small Car ( 5 seater or Ertiga) = 5000 Rs. / Big SUV ( 7 seater) = 10000 Rs.",
   "Advance payment is non-refundable.",
   "Dents, long scratches, breakage etc. cannot be claimed in insurance.",

@@ -68,8 +68,20 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { font-family: var(--font-display); }
+  /* ── Smooth scrolling & box-sizing ─────────────────────── */
+  html {
+    font-family: var(--font-display);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    box-sizing: border-box;
+  }
+  *, *::before, *::after {
+    box-sizing: inherit;
+    border-color: var(--color-border);
+  }
+
+  /* ── Body ──────────────────────────────────────────────── */
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -77,11 +89,56 @@
       radial-gradient(at 0% 0%, color-mix(in oklab, var(--brand) 8%, transparent) 0px, transparent 50%),
       radial-gradient(at 100% 100%, color-mix(in oklab, var(--success) 8%, transparent) 0px, transparent 50%);
     min-height: 100vh;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+    /* Smooth font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
   h1, h2, h3 { letter-spacing: -0.02em; }
+
+  /* ── Global smooth transitions on interactive elements ─── */
+  a, button, input, textarea, select, label {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Inputs: smooth focus ring ─────────────────────────── */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    transition: outline 100ms ease;
+  }
+
+  /* ── Tap highlight removal on mobile ────────────────────── */
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── Images fluid by default ───────────────────────────── */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
 }
 
+/* ── Utility classes ──────────────────────────────────────── */
 @utility gradient-brand { background-image: var(--gradient-brand); }
-@utility gradient-hero { background-image: var(--gradient-hero); }
-@utility shadow-card { box-shadow: var(--shadow-card); }
-@utility shadow-soft { box-shadow: var(--shadow-soft); }
+@utility gradient-hero  { background-image: var(--gradient-hero); }
+@utility shadow-card    { box-shadow: var(--shadow-card); }
+@utility shadow-soft    { box-shadow: var(--shadow-soft); }
+
+/* ── Smooth page-enter animation ─────────────────────────── */
+@utility fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
