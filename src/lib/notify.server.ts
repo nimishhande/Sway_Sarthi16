@@ -26,6 +26,7 @@ type Payload = {
   address_proof_urls: string[];
   deposit_doc_url: string;
   payment_screenshot_url: string;
+  selfie_url: string;
   signature_name: string;
 };
 
@@ -65,17 +66,18 @@ function fmtTime(t: string): string {
 }
 
 export async function sendOwnerNotifications(p: Payload) {
-  const [aadhaar, pan, licence, deposit, payment, ...address] = await Promise.all([
+  const [aadhaar, pan, licence, deposit, payment, selfie, ...address] = await Promise.all([
     signedUrl(p.aadhaar_url),
     signedUrl(p.pan_url),
     signedUrl(p.driving_licence_url),
     signedUrl(p.deposit_doc_url),
     signedUrl(p.payment_screenshot_url),
+    signedUrl(p.selfie_url),
     ...p.address_proof_urls.map((url) => signedUrl(url)),
   ]);
 
-  const emailStatus = await sendEmail(p, { aadhaar, pan, licence, address, deposit, payment });
-  const whatsappStatus = await sendWhatsApp(p, { aadhaar, pan, licence, address, deposit, payment });
+  const emailStatus = await sendEmail(p, { aadhaar, pan, licence, address, deposit, payment, selfie });
+  const whatsappStatus = await sendWhatsApp(p, { aadhaar, pan, licence, address, deposit, payment, selfie });
 
   return { email: emailStatus, whatsapp: whatsappStatus };
 }
@@ -100,7 +102,7 @@ async function downloadAttachment(
 
 async function sendEmail(
   p: Payload,
-  links: { aadhaar: string; pan: string; licence: string; address: string[]; deposit: string; payment: string },
+  links: { aadhaar: string; pan: string; licence: string; address: string[]; deposit: string; payment: string; selfie: string },
 ): Promise<string> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   if (!RESEND_API_KEY) return "skipped: RESEND_API_KEY not configured";
@@ -140,6 +142,7 @@ async function sendEmail(
     // Download all uploaded files to attach
     const safeName = p.customer_name.replace(/[^a-zA-Z0-9_-]+/g, "_");
     const baseAttachments = await Promise.all([
+      downloadAttachment(p.selfie_url, `${safeName}-Selfie-LiveVerification`),
       downloadAttachment(p.aadhaar_url, `${safeName}-Aadhaar`),
       downloadAttachment(p.pan_url, `${safeName}-PAN`),
       downloadAttachment(p.driving_licence_url, `${safeName}-DrivingLicence`),
@@ -200,6 +203,7 @@ async function sendEmail(
 
         <h2 style="color:#064E3B;font-size:15px;margin:22px 0 6px">Document Links</h2>
         <ul style="font-size:13px;padding-left:18px;margin:6px 0;line-height:1.6">
+          <li><strong>📸 Live Selfie (Identity Verification):</strong> <a href="${links.selfie}">${links.selfie}</a></li>
           <li><strong>Aadhaar Card:</strong> <a href="${links.aadhaar}">${links.aadhaar}</a></li>
           <li><strong>PAN Card:</strong> <a href="${links.pan}">${links.pan}</a></li>
           <li><strong>Driving Licence:</strong> <a href="${links.licence}">${links.licence}</a></li>
@@ -290,7 +294,7 @@ function row(label: string, value: string) {
 
 async function sendWhatsApp(
   p: Payload,
-  links: { aadhaar: string; pan: string; licence: string; address: string[]; deposit: string; payment: string },
+  links: { aadhaar: string; pan: string; licence: string; address: string[]; deposit: string; payment: string; selfie: string },
 ): Promise<string> {
   const TOKEN = process.env.WHATSAPP_TOKEN;
   const PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -306,6 +310,7 @@ async function sendWhatsApp(
     `*Trip Date:* ${fmtDate(p.trip_date)} ${fmtTime(p.pickup_time)}\n` +
     `*Return:* ${fmtDate(p.return_date)} ${fmtTime(p.return_time)}\n\n` +
     `*Documents:*\n` +
+    `• 📸 Selfie: ${links.selfie}\n` +
     `• Aadhaar: ${links.aadhaar}\n` +
     `• PAN: ${links.pan}\n` +
     `• Driving Licence: ${links.licence}\n` +

@@ -73,6 +73,7 @@ export const submitBooking = createServerFn({ method: "POST" })
         address_proof_urls: data.address_proof_urls,
         deposit_doc_url: data.deposit_doc_url,
         payment_screenshot_url: data.payment_screenshot_url,
+        selfie_url: data.selfie_url,
         signature_name: data.signature_name,
         terms_accepted: data.terms_accepted,
         declaration_accepted: data.declaration_accepted,
