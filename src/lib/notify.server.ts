@@ -66,15 +66,15 @@ function fmtTime(t: string): string {
 }
 
 export async function sendOwnerNotifications(p: Payload) {
-  const [aadhaar, pan, licence, deposit, payment, selfie, ...address] = await Promise.all([
+  const [aadhaar, pan, licence, payment, selfie, ...address] = await Promise.all([
     signedUrl(p.aadhaar_url),
     signedUrl(p.pan_url),
     signedUrl(p.driving_licence_url),
-    signedUrl(p.deposit_doc_url),
     signedUrl(p.payment_screenshot_url),
     signedUrl(p.selfie_url),
     ...p.address_proof_urls.map((url) => signedUrl(url)),
   ]);
+  const deposit = p.deposit_doc_url ? await signedUrl(p.deposit_doc_url) : "";
 
   const emailStatus = await sendEmail(p, { aadhaar, pan, licence, address, deposit, payment, selfie });
   const whatsappStatus = await sendWhatsApp(p, { aadhaar, pan, licence, address, deposit, payment, selfie });
@@ -146,7 +146,7 @@ async function sendEmail(
       downloadAttachment(p.aadhaar_url, `${safeName}-Aadhaar`),
       downloadAttachment(p.pan_url, `${safeName}-PAN`),
       downloadAttachment(p.driving_licence_url, `${safeName}-DrivingLicence`),
-      downloadAttachment(p.deposit_doc_url, `${safeName}-Deposit-${p.deposit_doc_type}`),
+      ...(p.deposit_doc_url ? [downloadAttachment(p.deposit_doc_url, `${safeName}-Deposit-${p.deposit_doc_type}`)] : []),
       downloadAttachment(p.payment_screenshot_url, `${safeName}-PaymentScreenshot`),
       ...p.address_proof_urls.map((u, i) =>
         downloadAttachment(
@@ -208,7 +208,7 @@ async function sendEmail(
           <li><strong>PAN Card:</strong> <a href="${links.pan}">${links.pan}</a></li>
           <li><strong>Driving Licence:</strong> <a href="${links.licence}">${links.licence}</a></li>
           ${addressLinksHtml}
-          <li><strong>Deposit Document (${p.deposit_doc_type}):</strong> <a href="${links.deposit}">${links.deposit}</a></li>
+          ${links.deposit ? `<li><strong>Deposit Document (${p.deposit_doc_type}):</strong> <a href="${links.deposit}">${links.deposit}</a></li>` : `<li><strong>Deposit Type:</strong> ${p.deposit_doc_type} (no document uploaded)</li>`}
           <li><strong>Payment Screenshot:</strong> <a href="${links.payment}">${links.payment}</a></li>
         </ul>
 
@@ -315,7 +315,7 @@ async function sendWhatsApp(
     `• PAN: ${links.pan}\n` +
     `• Driving Licence: ${links.licence}\n` +
     `• Address: ${links.address.join("\n• Address: ")}\n` +
-    `• Deposit: ${links.deposit}\n` +
+    `${p.deposit_doc_url ? `• Deposit: ${links.deposit}` : `• Deposit Type: ${p.deposit_doc_type} (no document)`}\n` +
     `• Payment: ${links.payment}`;
 
   try {

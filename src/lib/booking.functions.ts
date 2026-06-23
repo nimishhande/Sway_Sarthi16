@@ -22,13 +22,16 @@ const submitSchema = z.object({
   pan_url: z.string().min(1),
   driving_licence_url: z.string().min(1),
   address_proof_urls: z.array(z.string().min(1)).min(1),
-  deposit_doc_url: z.string().min(1),
+  deposit_doc_url: z.string(),
   payment_screenshot_url: z.string().min(1),
   selfie_url: z.string().min(1),
   signature_name: z.string().min(2),
   terms_accepted: z.literal(true),
   declaration_accepted: z.literal(true),
 }).refine(
+  (d) => d.deposit_doc_type !== "Bike" || d.deposit_doc_url.length > 0,
+  { message: "Vehicle RC is required when Bike is selected", path: ["deposit_doc_url"] }
+).refine(
   (d) => new Date(`${d.return_date}T${d.return_time.length === 5 ? d.return_time + ":00" : d.return_time}`)
        > new Date(`${d.trip_date}T${d.pickup_time.length === 5 ? d.pickup_time + ":00" : d.pickup_time}`),
   { message: "Return date/time must be after pickup date/time", path: ["return_date"] }

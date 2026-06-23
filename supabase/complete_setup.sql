@@ -45,12 +45,6 @@ CREATE TABLE public.bookings (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Grants
-GRANT SELECT, INSERT ON public.bookings TO anon;
-GRANT SELECT, INSERT ON public.bookings TO authenticated;
-GRANT ALL ON public.bookings TO service_role;
-GRANT USAGE, SELECT ON SEQUENCE public.booking_seq TO anon, authenticated, service_role;
-
 
 -- ===========================
 -- 2. APP_SETTINGS TABLE
@@ -61,9 +55,6 @@ CREATE TABLE public.app_settings (
   value TEXT,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
-GRANT SELECT ON public.app_settings TO anon, authenticated;
-GRANT ALL ON public.app_settings TO service_role;
 
 -- Seed the QR setting row
 INSERT INTO public.app_settings (key, value) VALUES ('qr_url', '') ON CONFLICT DO NOTHING;
@@ -116,23 +107,11 @@ CREATE POLICY "Settings are publicly readable"
 
 
 -- ===========================
--- 4. STORAGE BUCKETS
+-- 4. STORAGE POLICIES
 -- ===========================
+-- (Buckets are already created manually via Dashboard)
+-- Only need to add the read policy for rental-qr
 
--- Create buckets
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('user-docs', 'user-docs', false)
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('rental-qr', 'rental-qr', true)
-ON CONFLICT (id) DO NOTHING;
-
--- Storage RLS
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
-
--- user-docs: public upload only via service role (server-side)
--- rental-qr: public read + public upload
 CREATE POLICY "Anyone can read QR"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'rental-qr');
