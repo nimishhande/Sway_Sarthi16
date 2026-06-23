@@ -86,9 +86,12 @@ function BookingPage() {
     const required: Array<keyof typeof form> = [
       "car_model", "customer_name", "trip_location", "trip_date", "pickup_time", "pickup_location",
       "return_date", "return_time", "mobile_1", "email",
-      "aadhaar_url", "pan_url", "driving_licence_url", "deposit_doc_url", "payment_screenshot_url",
+      "aadhaar_url", "pan_url", "driving_licence_url", "payment_screenshot_url",
       "signature_name",
     ];
+    if (form.deposit_doc_type === "Bike" && !form.deposit_doc_url) {
+      return toast.error("Please fill deposit doc url");
+    }
     for (const k of required) {
       if (!form[k]) return toast.error(`Please fill ${k.replace(/_/g, " ")}`);
     }
@@ -200,7 +203,7 @@ function BookingPage() {
                   <FileField 
                     label={form.deposit_doc_type === "Bike" ? "Upload Vehicle RC" : "Upload Transaction Screenshot"} 
                     folder="deposit" 
-                    required 
+                    required={form.deposit_doc_type === "Bike"} 
                     value={form.deposit_doc_url} 
                     onChange={(p) => set("deposit_doc_url", p)} 
                   />
