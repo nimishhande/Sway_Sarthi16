@@ -3,7 +3,7 @@ import { uploadDirect } from "@/lib/upload-helper";
 import { Loader2, CheckCircle2, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_SIZE = 20 * 1024 * 1024; // 20 MB (images auto-compressed before upload)
 const ACCEPT = ".jpg,.jpeg,.png,.pdf";
 
 interface Props {
@@ -22,7 +22,7 @@ export function MultiFileField({ label, required, bucket = "user-docs", folder, 
 
   async function handle(file: File) {
     if (file.size > MAX_SIZE) {
-      toast.error("File too large", { description: "Maximum size is 5 MB." });
+      toast.error("File too large", { description: "Maximum size is 20 MB." });
       return;
     }
     const allowed = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
@@ -84,7 +84,7 @@ export function MultiFileField({ label, required, bucket = "user-docs", folder, 
           className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-input bg-background px-3 py-3.5 text-sm text-muted-foreground transition-colors hover:border-primary hover:bg-accent hover:text-foreground disabled:opacity-50"
         >
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
-          {uploading ? "Uploading…" : "Click to upload file (JPG, PNG, PDF · max 5MB)"}
+          {uploading ? "Uploading…" : "Click to upload file (JPG, PNG, PDF · max 20MB)"}
         </button>
 
         <input

@@ -1,4 +1,7 @@
 import { uploadFile } from "@/lib/booking.functions";
+import { compressImage } from "@/lib/compress-image";
+
+const MAX_RAW_SIZE = 20 * 1024 * 1024; // 20 MB — raw file before compression
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -18,16 +21,21 @@ export async function uploadDirect(
   bucket: "user-docs" | "rental-qr",
   folder?: string
 ): Promise<string> {
-  if (file.size > 5 * 1024 * 1024) {
-    throw new Error("File too large (max 5MB).");
+  if (file.size > MAX_RAW_SIZE) {
+    throw new Error("File too large (max 20MB).");
   }
-  const dataBase64 = await fileToBase64(file);
+
+  // Auto-compress images (iPhone photos 10-15MB → ~1-2MB)
+  // PDFs pass through unchanged
+  const processed = await compressImage(file);
+
+  const dataBase64 = await fileToBase64(processed);
   const res = await uploadFile({
     data: {
       bucket,
       folder,
-      filename: file.name,
-      contentType: file.type || "application/octet-stream",
+      filename: processed.name,
+      contentType: processed.type || "application/octet-stream",
       dataBase64,
     },
   });

@@ -142,8 +142,8 @@ export const uploadFile = createServerFn({ method: "POST" })
     console.log("[Upload Debug] Original File:", data.filename);
     console.log("[Upload Debug] Generated Path:", path);
 
-    if (buffer.byteLength > 5 * 1024 * 1024) {
-      throw new Error("File too large (max 5MB).");
+    if (buffer.byteLength > 20 * 1024 * 1024) {
+      throw new Error("File too large (max 20MB).");
     }
     const { error } = await supabaseAdmin.storage.from(data.bucket).upload(path, buffer, {
       cacheControl: "3600",
