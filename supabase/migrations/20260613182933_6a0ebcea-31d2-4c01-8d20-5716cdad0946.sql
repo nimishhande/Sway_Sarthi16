@@ -20,7 +20,7 @@ WITH CHECK (
   AND length(trim(driving_licence_url)) > 0
   AND length(trim(address_proof_url)) > 0
   AND jsonb_array_length(coalesce(address_proof_urls, '[]'::jsonb)) > 0
-  AND length(trim(deposit_doc_url)) > 0
+  AND (deposit_doc_type <> 'Bike' OR length(trim(deposit_doc_url)) > 0)
   AND length(trim(payment_screenshot_url)) > 0
   AND length(trim(signature_name)) >= 2
   AND terms_accepted = true
