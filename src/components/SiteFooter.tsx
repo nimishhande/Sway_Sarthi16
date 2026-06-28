@@ -24,8 +24,7 @@ export function SiteFooter() {
 
             {/* Social */}
             <div className="flex gap-4">
-              <a href="#" aria-label="Facebook" className="hover:text-brand transition-colors duration-200"><Facebook className="h-5 w-5" /></a>
-              <a href="#" aria-label="Instagram" className="hover:text-brand transition-colors duration-200"><Instagram className="h-5 w-5" /></a>
+              <a href="https://www.instagram.com/sway_sarthi_car?igsh=ZTRzMDdwMWg1YjF3" aria-label="Instagram" className="hover:text-brand transition-colors duration-200" target="_blank" rel="noreferrer"><Instagram className="h-5 w-5" /></a>
             </div>
 
             {/* Contact */}
@@ -37,11 +36,11 @@ export function SiteFooter() {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0 text-brand" />
-                <a href="tel:+919834635339" className="hover:text-white transition-colors duration-200">+91 98346 35339</a>
+                <a href="tel:+917522909191" className="hover:text-white transition-colors duration-200">+91 98346 35339</a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 shrink-0 text-brand" />
-                <a href="mailto:rickyramteke40@gmail.com" className="hover:text-white transition-colors duration-200">rickyramteke40@gmail.com</a>
+                <a href="mailto:swaysarthi91@gmail.com" className="hover:text-white transition-colors duration-200">rickyramteke40@gmail.com</a>
               </div>
             </div>
           </div>
@@ -54,7 +53,7 @@ export function SiteFooter() {
                 <span className="text-xs uppercase tracking-widest text-white/50 font-semibold">Designed &amp; Developed by</span>
               </div>
               <div className="md:text-right">
-                <p className="text-xl font-bold text-white tracking-tight">Lastbench Labs</p>
+                <p className="text-xl font-bold text-white tracking-tight">TRUNY Solutions</p>
                 <p className="text-sm text-white/60 mt-1">Software · AI · Automation &amp; More</p>
               </div>
               <div className="space-y-2 text-sm md:text-right">
@@ -73,7 +72,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 text-center text-xs text-white/40">
-          <p>&copy; {new Date().getFullYear()} Sway Sarthi Cars Rental. All rights reserved. &nbsp;|&nbsp; Built by <span className="text-white/60 font-medium">Lastbench Labs</span></p>
+          <p>&copy; {new Date().getFullYear()} Sway Sarthi Cars Rental. All rights reserved. &nbsp;|&nbsp; Built by <span className="text-white/60 font-medium">TRUNY Solutions</span></p>
         </div>
       </div>
     </footer>
