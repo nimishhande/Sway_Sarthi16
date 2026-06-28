@@ -36,11 +36,11 @@ export function SiteFooter() {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0 text-brand" />
-                <a href="tel:+917522909191" className="hover:text-white transition-colors duration-200">+91 98346 35339</a>
+                <a href="tel:+917522909191" className="hover:text-white transition-colors duration-200">+91 75229 09191</a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 shrink-0 text-brand" />
-                <a href="mailto:swaysarthi91@gmail.com" className="hover:text-white transition-colors duration-200">rickyramteke40@gmail.com</a>
+                <a href="mailto:swaysarthi91@gmail.com" className="hover:text-white transition-colors duration-200">swaysarthi91@gmail.com</a>
               </div>
             </div>
           </div>
