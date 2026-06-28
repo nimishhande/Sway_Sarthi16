@@ -20,9 +20,11 @@ type Payload = {
   email: string;
   address_proof_type: string;
   deposit_doc_type: string;
-  aadhaar_url: string;
+  aadhaar_front_url: string;
+  aadhaar_back_url: string;
   pan_url: string;
-  driving_licence_url: string;
+  driving_licence_front_url: string;
+  driving_licence_back_url: string;
   address_proof_urls: string[];
   deposit_doc_url: string;
   payment_screenshot_url: string;
@@ -66,18 +68,20 @@ function fmtTime(t: string): string {
 }
 
 export async function sendOwnerNotifications(p: Payload) {
-  const [aadhaar, pan, licence, payment, selfie, ...address] = await Promise.all([
-    signedUrl(p.aadhaar_url),
+  const [aadhaar_front, aadhaar_back, pan, licence_front, licence_back, payment, selfie, ...address] = await Promise.all([
+    signedUrl(p.aadhaar_front_url),
+    signedUrl(p.aadhaar_back_url),
     signedUrl(p.pan_url),
-    signedUrl(p.driving_licence_url),
+    signedUrl(p.driving_licence_front_url),
+    signedUrl(p.driving_licence_back_url),
     signedUrl(p.payment_screenshot_url),
     signedUrl(p.selfie_url),
     ...p.address_proof_urls.map((url) => signedUrl(url)),
   ]);
   const deposit = p.deposit_doc_url ? await signedUrl(p.deposit_doc_url) : "";
 
-  const emailStatus = await sendEmail(p, { aadhaar, pan, licence, address, deposit, payment, selfie });
-  const whatsappStatus = await sendWhatsApp(p, { aadhaar, pan, licence, address, deposit, payment, selfie });
+  const emailStatus = await sendEmail(p, { aadhaar_front, aadhaar_back, pan, licence_front, licence_back, address, deposit, payment, selfie });
+  const whatsappStatus = await sendWhatsApp(p, { aadhaar_front, aadhaar_back, pan, licence_front, licence_back, address, deposit, payment, selfie });
 
   return { email: emailStatus, whatsapp: whatsappStatus };
 }
@@ -102,7 +106,7 @@ async function downloadAttachment(
 
 async function sendEmail(
   p: Payload,
-  links: { aadhaar: string; pan: string; licence: string; address: string[]; deposit: string; payment: string; selfie: string },
+  links: { aadhaar_front: string; aadhaar_back: string; pan: string; licence_front: string; licence_back: string; address: string[]; deposit: string; payment: string; selfie: string },
 ): Promise<string> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   if (!RESEND_API_KEY) return "skipped: RESEND_API_KEY not configured";
@@ -143,9 +147,11 @@ async function sendEmail(
     const safeName = p.customer_name.replace(/[^a-zA-Z0-9_-]+/g, "_");
     const baseAttachments = await Promise.all([
       downloadAttachment(p.selfie_url, `${safeName}-Selfie-LiveVerification`),
-      downloadAttachment(p.aadhaar_url, `${safeName}-Aadhaar`),
+      downloadAttachment(p.aadhaar_front_url, `${safeName}-Aadhaar-Front`),
+      downloadAttachment(p.aadhaar_back_url, `${safeName}-Aadhaar-Back`),
       downloadAttachment(p.pan_url, `${safeName}-PAN`),
-      downloadAttachment(p.driving_licence_url, `${safeName}-DrivingLicence`),
+      downloadAttachment(p.driving_licence_front_url, `${safeName}-DrivingLicence-Front`),
+      downloadAttachment(p.driving_licence_back_url, `${safeName}-DrivingLicence-Back`),
       ...(p.deposit_doc_url ? [downloadAttachment(p.deposit_doc_url, `${safeName}-Deposit-${p.deposit_doc_type}`)] : []),
       downloadAttachment(p.payment_screenshot_url, `${safeName}-PaymentScreenshot`),
       ...p.address_proof_urls.map((u, i) =>
@@ -204,9 +210,11 @@ async function sendEmail(
         <h2 style="color:#064E3B;font-size:15px;margin:22px 0 6px">Document Links</h2>
         <ul style="font-size:13px;padding-left:18px;margin:6px 0;line-height:1.6">
           <li><strong>📸 Live Selfie (Identity Verification):</strong> <a href="${links.selfie}">${links.selfie}</a></li>
-          <li><strong>Aadhaar Card:</strong> <a href="${links.aadhaar}">${links.aadhaar}</a></li>
+          <li><strong>Aadhaar Card (Front):</strong> <a href="${links.aadhaar_front}">${links.aadhaar_front}</a></li>
+          <li><strong>Aadhaar Card (Back):</strong> <a href="${links.aadhaar_back}">${links.aadhaar_back}</a></li>
           <li><strong>PAN Card:</strong> <a href="${links.pan}">${links.pan}</a></li>
-          <li><strong>Driving Licence:</strong> <a href="${links.licence}">${links.licence}</a></li>
+          <li><strong>Driving Licence (Front):</strong> <a href="${links.licence_front}">${links.licence_front}</a></li>
+          <li><strong>Driving Licence (Back):</strong> <a href="${links.licence_back}">${links.licence_back}</a></li>
           ${addressLinksHtml}
           ${links.deposit ? `<li><strong>Deposit Document (${p.deposit_doc_type}):</strong> <a href="${links.deposit}">${links.deposit}</a></li>` : `<li><strong>Deposit Type:</strong> ${p.deposit_doc_type} (no document uploaded)</li>`}
           <li><strong>Payment Screenshot:</strong> <a href="${links.payment}">${links.payment}</a></li>
@@ -294,7 +302,7 @@ function row(label: string, value: string) {
 
 async function sendWhatsApp(
   p: Payload,
-  links: { aadhaar: string; pan: string; licence: string; address: string[]; deposit: string; payment: string; selfie: string },
+  links: { aadhaar_front: string; aadhaar_back: string; pan: string; licence_front: string; licence_back: string; address: string[]; deposit: string; payment: string; selfie: string },
 ): Promise<string> {
   const TOKEN = process.env.WHATSAPP_TOKEN;
   const PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -311,9 +319,11 @@ async function sendWhatsApp(
     `*Return:* ${fmtDate(p.return_date)} ${fmtTime(p.return_time)}\n\n` +
     `*Documents:*\n` +
     `• 📸 Selfie: ${links.selfie}\n` +
-    `• Aadhaar: ${links.aadhaar}\n` +
+    `• Aadhaar (Front): ${links.aadhaar_front}\n` +
+    `• Aadhaar (Back): ${links.aadhaar_back}\n` +
     `• PAN: ${links.pan}\n` +
-    `• Driving Licence: ${links.licence}\n` +
+    `• Driving Licence (Front): ${links.licence_front}\n` +
+    `• Driving Licence (Back): ${links.licence_back}\n` +
     `• Address: ${links.address.join("\n• Address: ")}\n` +
     `${p.deposit_doc_url ? `• Deposit: ${links.deposit}` : `• Deposit Type: ${p.deposit_doc_type} (no document)`}\n` +
     `• Payment: ${links.payment}`;

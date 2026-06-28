@@ -31,9 +31,11 @@ CREATE TABLE public.bookings (
   address_proof_urls JSONB DEFAULT '[]',
   deposit_doc_type TEXT NOT NULL,
   deposit_doc_url TEXT NOT NULL DEFAULT '',
-  driving_licence_url TEXT NOT NULL DEFAULT '',
+  driving_licence_front_url TEXT NOT NULL DEFAULT '',
+  driving_licence_back_url TEXT NOT NULL DEFAULT '',
   selfie_url TEXT NOT NULL DEFAULT '',
-  aadhaar_url TEXT NOT NULL,
+  aadhaar_front_url TEXT NOT NULL,
+  aadhaar_back_url TEXT NOT NULL,
   pan_url TEXT NOT NULL,
   payment_screenshot_url TEXT NOT NULL,
   signature_name TEXT NOT NULL,
@@ -82,9 +84,11 @@ WITH CHECK (
   AND email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$'
   AND length(trim(address_proof_type)) > 0
   AND length(trim(deposit_doc_type)) > 0
-  AND length(trim(aadhaar_url)) > 0
+  AND length(trim(aadhaar_front_url)) > 0
+  AND length(trim(aadhaar_back_url)) > 0
   AND length(trim(pan_url)) > 0
-  AND length(trim(driving_licence_url)) > 0
+  AND length(trim(driving_licence_front_url)) > 0
+  AND length(trim(driving_licence_back_url)) > 0
   AND length(trim(address_proof_url)) > 0
   AND jsonb_array_length(coalesce(address_proof_urls, '[]'::jsonb)) > 0
   AND (deposit_doc_type <> 'Bike' OR length(trim(deposit_doc_url)) > 0)

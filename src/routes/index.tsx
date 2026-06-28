@@ -51,7 +51,7 @@ const initialForm = {
   mobile_1: "", mobile_2: "", email: "",
   address_proof_type: "Electricity Bill",
   deposit_doc_type: "Bike",
-  aadhaar_url: "", pan_url: "", driving_licence_url: "", address_proof_urls: [] as string[],
+  aadhaar_front_url: "", aadhaar_back_url: "", pan_url: "", driving_licence_front_url: "", driving_licence_back_url: "", address_proof_urls: [] as string[],
   deposit_doc_url: "", payment_screenshot_url: "", selfie_url: "",
   signature_name: "",
 };
@@ -86,7 +86,7 @@ function BookingPage() {
     const required: Array<keyof typeof form> = [
       "car_model", "customer_name", "trip_location", "trip_date", "pickup_time", "pickup_location",
       "return_date", "return_time", "mobile_1", "email",
-      "aadhaar_url", "pan_url", "driving_licence_url", "payment_screenshot_url",
+      "aadhaar_front_url", "aadhaar_back_url", "pan_url", "driving_licence_front_url", "driving_licence_back_url", "payment_screenshot_url",
       "signature_name",
     ];
     if (form.deposit_doc_type === "Bike" && !form.deposit_doc_url) {
@@ -172,9 +172,15 @@ function BookingPage() {
           <Section step={4} title="Document Uploads" icon={<FileText className="h-5 w-5" />}>
             <div className="space-y-5">
               <FileField label="Live Identity Verification (Take a Selfie)" folder="selfie" capture="user" required value={form.selfie_url} onChange={(p) => set("selfie_url", p)} />
-              <FileField label="Aadhaar Card" folder="aadhaar" required value={form.aadhaar_url} onChange={(p) => set("aadhaar_url", p)} />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FileField label="Aadhaar Card (Front)" folder="aadhaar" required value={form.aadhaar_front_url} onChange={(p) => set("aadhaar_front_url", p)} />
+                <FileField label="Aadhaar Card (Back)" folder="aadhaar" required value={form.aadhaar_back_url} onChange={(p) => set("aadhaar_back_url", p)} />
+              </div>
               <FileField label="PAN Card" folder="pan" required value={form.pan_url} onChange={(p) => set("pan_url", p)} />
-              <FileField label="Driving Licence" folder="licence" required value={form.driving_licence_url} onChange={(p) => set("driving_licence_url", p)} />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FileField label="Driving Licence (Front)" folder="licence" required value={form.driving_licence_front_url} onChange={(p) => set("driving_licence_front_url", p)} />
+                <FileField label="Driving Licence (Back)" folder="licence" required value={form.driving_licence_back_url} onChange={(p) => set("driving_licence_back_url", p)} />
+              </div>
 
               <div>
                 <Label className="text-sm font-medium">Local Address Proof Type <span className="text-destructive">*</span></Label>

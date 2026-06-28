@@ -34,7 +34,8 @@ export type Database = {
       }
       bookings: {
         Row: {
-          aadhaar_url: string
+          aadhaar_front_url: string
+          aadhaar_back_url: string
           address_proof_type: string
           address_proof_url: string
           address_proof_urls: Json | null
@@ -45,7 +46,8 @@ export type Database = {
           declaration_accepted: boolean
           deposit_doc_type: string
           deposit_doc_url: string
-          driving_licence_url: string
+          driving_licence_front_url: string
+          driving_licence_back_url: string
           email: string
           id: string
           mobile_1: string
@@ -66,7 +68,8 @@ export type Database = {
           trip_location: string
         }
         Insert: {
-          aadhaar_url: string
+          aadhaar_front_url: string
+          aadhaar_back_url: string
           address_proof_type: string
           address_proof_url: string
           address_proof_urls?: Json | null
@@ -77,7 +80,8 @@ export type Database = {
           declaration_accepted?: boolean
           deposit_doc_type: string
           deposit_doc_url: string
-          driving_licence_url?: string
+          driving_licence_front_url?: string
+          driving_licence_back_url?: string
           email: string
           id?: string
           mobile_1: string
@@ -98,7 +102,8 @@ export type Database = {
           trip_location: string
         }
         Update: {
-          aadhaar_url?: string
+          aadhaar_front_url?: string
+          aadhaar_back_url?: string
           address_proof_type?: string
           address_proof_url?: string
           address_proof_urls?: Json | null
@@ -109,7 +114,8 @@ export type Database = {
           declaration_accepted?: boolean
           deposit_doc_type?: string
           deposit_doc_url?: string
-          driving_licence_url?: string
+          driving_licence_front_url?: string
+          driving_licence_back_url?: string
           email?: string
           id?: string
           mobile_1?: string
